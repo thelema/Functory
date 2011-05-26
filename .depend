@@ -1,0 +1,27 @@
+binary.cmo: binary.cmi 
+binary.cmx: binary.cmi 
+control.cmo: 
+control.cmx: 
+cores.cmo: map_fold.cmo control.cmo 
+cores.cmx: map_fold.cmx control.cmx 
+map_fold.cmo: 
+map_fold.cmx: 
+master_test.cmo: network.cmo functory.cmi 
+master_test.cmx: network.cmx functory.cmi 
+network.cmo: protocol.cmi map_fold.cmo control.cmo binary.cmi 
+network.cmx: protocol.cmx map_fold.cmx control.cmx binary.cmx 
+network_test.cmo: functory.cmi 
+network_test.cmx: functory.cmi 
+protocol.cmo: binary.cmi protocol.cmi 
+protocol.cmx: binary.cmx protocol.cmi 
+sequential.cmo: 
+sequential.cmx: 
+test.cmo: functory.cmi 
+test.cmx: functory.cmi 
+version.cmo: 
+version.cmx: 
+worker_test.cmo: network.cmo functory.cmi control.cmo 
+worker_test.cmx: network.cmx functory.cmi control.cmx 
+binary.cmi: 
+functory.cmi: 
+protocol.cmi: 
