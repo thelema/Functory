@@ -130,6 +130,9 @@ module Network : sig
 	If [port] is not given, it is set to the default port number 
 	(see below). *)
 
+  val torque_init : unit -> unit
+    (** initialize workers based on torque resource management system's environment variables and config *)
+
   val set_default_port_number : int -> unit
     (** Sets the default port number.
         If not called, the default port number is 51000. *)
