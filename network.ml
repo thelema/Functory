@@ -32,8 +32,12 @@ let ping_interval = ref 10.
 
 let set_ping_interval t = ping_interval := t
 
+let is_torque_worker () =
+  try Sys.getenv "PBS_NODENUM" <> "0" || Sys.getenv "PBS_VNODENUM" <> "0" 
+  with Not_found -> false
+
 let is_worker = 
-  try ignore (Sys.getenv "WORKER"); true with Not_found -> false 
+  try ignore (Sys.getenv "WORKER"); true with Not_found -> is_torque_worker ()
 
 let encode_string_pair (s1, s2) =
   let buf = Buffer.create 1024 in
@@ -439,6 +443,18 @@ let declare_workers ?(port = !default_port_number) ?(n=1) s =
   for i = 1 to n do
     workers := create_worker ~port s :: !workers
   done
+
+let torque_init () = 
+  try 
+    let nodefile = Sys.getenv "PBS_NODEFILE" in
+    let ic = open_in nodefile in
+    let _my_node = input_line ic in (* eat the first node, it is the master *)
+    let rec loop acc = 
+      try loop (input_line ic :: acc) with End_of_file -> List.rev acc
+    in
+    let nodes = loop [] in (* all of the nodes listed in the nodefile *)
+    List.iter (fun n -> workers := create_worker n :: !workers) nodes
+  with Not_found -> ()
 
 let worker_fd = Hashtbl.create 17
 
