@@ -453,8 +453,10 @@ let torque_init () =
       try loop (input_line ic :: acc) with End_of_file -> List.rev acc
     in
     let nodes = loop [] in (* all of the nodes listed in the nodefile *)
-    List.iter (fun n -> workers := create_worker n :: !workers) nodes
-  with Not_found -> ()
+    eprintf "Configuring nodes: ";
+    List.iter (fun n -> eprintf "%s," n; workers := create_worker n :: !workers) nodes;
+    eprintf "\n%!"
+  with Not_found -> eprintf "PBS_NODEFILE not found in env, cannot setup clients"
 
 let worker_fd = Hashtbl.create 17
 
